@@ -1,6 +1,6 @@
 <template>
   <el-container :id="page" style="height: 100%;">
-    <el-header style="height: 80px;">
+    <el-header style="height: 150px;">
       <el-form
         size="mini"
         :inline="true"
@@ -8,57 +8,64 @@
         :model="formData"
         class="demo-form-inline"
       >
-        <el-form-item label="国籍">
-          <el-select v-model="formData.region">
-            <el-option label="中国" value="CH"></el-option>
-            <el-option label="美国" value="EM"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="formData.state">
-            <el-option label="正常" value="normal"></el-option>
-            <el-option label="异常" value="abnormal"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="航班性质">
-          <el-select v-model="formData.nature">
-            <el-option label="国内" value="DOM"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="姓名">
-          <el-input v-model="formData.name" placeholder="旅客姓名"></el-input>
+          <el-input v-model="formData.name" placeholder="姓名"></el-input>
         </el-form-item>
-        <el-form-item label="航班号">
-          <el-input v-model="formData.flightNo" placeholder="航班号"></el-input>
+        <el-form-item label="性别">
+          <el-select v-model="formData.gender">
+            <el-option label="男" value="man"></el-option>
+            <el-option label="女" value="woman"></el-option>
+          </el-select>
         </el-form-item>
+        <el-form-item label="证件类型">
+          <el-select v-model="formData.IDcard">
+            <el-option label="中华人民共和国居民身份证" value="A"></el-option>
+            <el-option label="港澳台居民身份证" value="B"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="登记日期">
+          <el-date-picker
+            v-model="formData.registrationDate"
+            type="datetimerange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="证件号码">
+          <el-input v-model="formData.IDcard" placeholder="证件号码"></el-input>
+        </el-form-item>
+        <el-form-item label="登记人">
+          <el-input v-model="formData.registerPerson" placeholder="登记人"></el-input>
+        </el-form-item>
+
         <el-form-item style="margin-left: 100px;">
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="primary" @click="checkIn">登记</el-button>
-          <el-button type="primary" @click="cancel">核销</el-button>
-          <el-button type="primary" @click="outerVisible = true">多层dialog开关</el-button>
-          <el-button type="primary" @click="addVsisible = true">自定义添加数据</el-button>
+          <el-button type="primary" @click="onSearch">搜索</el-button>
+          <el-button type="primary" @click="addNew=true">新增</el-button>
         </el-form-item>
+
         <span style="line-height: 40px;float: right;">合计：{{tableData.length}}条数据</span>
       </el-form>
     </el-header>
-
     <el-table :data="tableData" height="100%" style="width: 100%;">
-      <el-table-column prop="id" label="id" width="80"></el-table-column>
-      <el-table-column prop="date" label="日期" width="180"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-      <el-table-column prop="address" label="地址"></el-table-column>
-      <el-table-column prop="age" label="年龄"></el-table-column>
-      <el-table-column prop="IDcard" label="身份证号码"></el-table-column>
-      <el-table-column label="操作">
+      <el-table-column prop="id" label="序号" width="60px;" align="center"></el-table-column>
+      <el-table-column prop="staffCoding" label="人员编码" width="90px;" align="center"></el-table-column>
+      <el-table-column prop="name" label="姓名" width="60px;" align="center"></el-table-column>
+      <el-table-column prop="gender" label="性别" width="60px;" align="center"></el-table-column>
+      <el-table-column prop="certificateType" label="证件类别" width="200px;" align="center"></el-table-column>
+      <el-table-column prop="IDcard" label="证件号码" width="160px;" align="center"></el-table-column>
+      <el-table-column prop="greyListType" label="灰名单类别" width="100px;" align="center"></el-table-column>
+      <el-table-column prop="registrationDate" label="登记日期" width="130px;" align="center"></el-table-column>
+      <el-table-column prop="registerPerson" label="登记人" width="90px;" align="center"></el-table-column>
+      <el-table-column label="操作" width="150px;" align="center">
         <template slot-scope="scope">
-          <el-button size="mini" @click="deleteRow(scope)" type="danger">删除</el-button>
           <el-button size="mini" @click="update(scope)" type="warning">修改</el-button>
           <el-button size="mini" @click="query(scope)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <!-- 多层dialog -->
+    <!-- 多层dialog 
     <el-dialog title="外层 Dialog" :visible.sync="outerVisible">
       <el-dialog width="30%" title="内层 Dialog" :visible.sync="innerVisible" append-to-body>
         <div>这里加入内层外层dialog的内容</div>
@@ -69,35 +76,80 @@
         <el-button type="primary" @click="innerVisible = true">打开内层 Dialog</el-button>
       </div>
     </el-dialog>
+    -->
 
-    <!-- 添加数据的dialog录入 -->
-    <el-dialog title="添加数据" :visible.sync="addVsisible">
+    <el-dialog title="添加数据" :visible.sync="addNew">
       <el-form :model="addForm" :rules="rules" ref="addForm" label-width="100px" inline>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="addForm.name"></el-input>
+        <el-form-item label="人员编码">
+          <el-input v-model="addForm.staffCoding" placeholder="人员编码"></el-input>
         </el-form-item>
-        <el-form-item label="日期" required>
-          <el-form-item prop="date">
-            <el-date-picker
-              type="date"
-              placeholder="选择日期"
-              v-model="addForm.date"
-              style="width: 100%;"
-            ></el-date-picker>
-          </el-form-item>
+        <el-form-item label="姓名">
+          <el-input v-model="addForm.name" placeholder="姓名"></el-input>
         </el-form-item>
-        <el-form-item label="年龄" prop="age">
-          <el-input type="" v-model="addForm.age"></el-input>
+        <el-form-item label="性别">
+          <el-select v-model="addForm.gender">
+            <el-option label="男" value="man"></el-option>
+            <el-option label="女" value="woman"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="身份证号码" prop="IDcard">
-          <el-input v-model="addForm.IDcard"></el-input>
+        <el-form-item label="证件类型">
+          <el-select v-model="addForm.certificateType">
+            <el-option label="中华人民共和国居民身份证" value="A"></el-option>
+            <el-option label="港澳台居民身份证" value="B"></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="地址" prop="address">
-          <el-input v-model="addForm.address"></el-input>
+        <el-form-item label="证件号码">
+          <el-input v-model="addForm.IDcard" placeholder="证件号码"></el-input>
+        </el-form-item>
+        <el-form-item label="灰名单类别">
+          <el-select v-model="addForm.greyListType">
+            <el-option label="推销" value="A1"></el-option>
+            <el-option label="乞讨" value="B1"></el-option>
+            <el-option label="非法拉客人员" value="C1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="照片">
+          <el-image
+            v-model="addForm.pictures[0]"
+            style="width: 100px; height: 100px"
+            :src="url1"
+            :fit="fit"
+          ></el-image>
+          <el-image
+            v-model="addForm.pictures[1]"
+            style="width: 100px; height: 100px"
+            :src="url2"
+            :fit="fit"
+          ></el-image>
+          <el-image
+            v-model="addForm.pictures[2]"
+            style="width: 100px; height: 100px"
+            :src="url3"
+            :fit="fit"
+          ></el-image>
+          <el-image
+            v-model="addForm.pictures[3]"
+            style="width: 100px; height: 100px"
+            :src="url4"
+            :fit="fit"
+          ></el-image>
+          <el-image
+            v-model="addForm.pictures[4]"
+            style="width: 100px; height: 100px"
+            :src="url5"
+            :fit="fit"
+          ></el-image>
+        </el-form-item>
+
+        <el-form-item label="登记人">
+          <el-input v-model="addForm.registerPerson" placeholder="登记人"></el-input>
+        </el-form-item>
+        <el-form-item label="登记时间">
+          <el-date-picker v-model="addForm.registrationDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button @click="addVsisible = false">取 消</el-button>
-          <el-button type="primary" @click="addData">确 认</el-button>
+          <el-button @click="addNew = false">取 消</el-button>
+          <el-button type="primary" @click="addData">保 存</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -111,11 +163,14 @@ const IDCard18_REGEX =
   "^[1-9](\\d{5})(19|20)(\\d{2})((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)(\\d{3})(\\d|X|x)$";
 const page = "index";
 const tableItem = {
-  date: "2016-05-02",
-  name: "王小虎",
-  age: "18",
-  IDcard: "",
-  address: "上海市普陀区金沙江路 1518 弄"
+  staffCoding: "10001", //人员编码
+  name: "李四", //姓名
+  gender: "男", //性别
+  certificateType: "中华人民共和国居民身份证", //证件类别
+  IDcard: "511623199802032222", //证件号码
+  greyListType: "推销", //灰名单类别
+  registrationDate: "2019/03/08 10:00", //登记日期
+  registerPerson: "张三" //登记人
 };
 export default {
   name: page,
@@ -125,19 +180,25 @@ export default {
       page: page,
       id: 50,
       formData: {
-        class: "",
-        name: "",
-        flightNo: "",
-        region: "",
-        state: "",
-        nature: ""
+        class: "", //这个class字段是干嘛的--todo
+        name: "", //姓名
+        gender: "", //性别
+        certificateType: "", //证件类型
+        registrationDate: "", //登记日期
+        IDcard: "", //证件号码
+        registerPerson: "" //登记人
       },
       addForm: {
-        date: "2016-05-02",
-        name: "王小虎",
-        age: 18,
-        IDcard: "",
-        address: "上海市普陀区金沙江路 1518 弄"
+        staffCoding: "", //人员编码
+        name: "", //姓名
+        gender: "", //性别
+        certificateType: "", //证件类别
+        IDcard: "", //证件号码
+        greyListType: "", //灰名单类别
+        pictures: ["url1", "url2", "url3", "url4", "url5"], //照片
+        registerPerson: "", //登记人
+        registrationDate: "", //登记日期
+        remarks: "" //备注
       },
       rules: {
         name: [
@@ -170,6 +231,7 @@ export default {
         address: [{ required: true, message: "地址不能为空", trigger: "blur" }]
       },
       tableData: [],
+      addNew: false,
       outerVisible: false,
       innerVisible: false,
       addVsisible: false
@@ -177,7 +239,7 @@ export default {
   },
   components: {},
   mounted() {
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 20; i++) {
       this.tableData.push({ id: i, ...tableItem });
     }
   },
@@ -238,11 +300,11 @@ export default {
         callback(new Error("身份证格式不正确"));
       }
     },
-    onSubmit() {
-      this.$message("submit!");
+    onSearch() {
+      this.$message("search!");
     },
-    checkIn() {
-      this.$message("checkIn!");
+    addNew() {
+      this.$message("addNew!");
     },
     cancel() {
       this.$message("cancel!");
@@ -264,9 +326,7 @@ export default {
           });
         });
     },
-    addData(){
-
-    },
+    addData() {},
     update(scope) {
       api.test().then(res => {
         this.tableData.push({ id: this.id, ...res });

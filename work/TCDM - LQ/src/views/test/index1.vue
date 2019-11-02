@@ -24,49 +24,40 @@
           </el-select>
         </el-form-item>
         <el-form-item label="登记日期">
-          <el-date-picker v-model="formData.registrationDate" type="date" placeholder="登记日期"></el-date-picker>
+          <el-date-picker
+            v-model="formData.registrationDate"
+            type="datetimerange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="证件号码">
-          <el-input v-model="formData.idNumber" placeholder="证件号码"></el-input>
+          <el-input v-model="formData.IDcard" placeholder="证件号码"></el-input>
         </el-form-item>
         <el-form-item label="登记人">
           <el-input v-model="formData.registerPerson" placeholder="登记人"></el-input>
         </el-form-item>
-
+        <el-form-item label="类别">
+          <el-select v-model="formData.class">
+            <el-option label="灰名单" value="greylist"></el-option>
+            <el-option label="无关人员" value="unrelatedpersons"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item style="margin-left: 100px;">
           <el-button type="primary" @click="onSearch">搜索</el-button>
           <el-button type="primary" @click="addNew">新增</el-button>
         </el-form-item>
-
-        <!-- <el-form-item style="margin-left: 100px;">
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="primary" @click="checkIn">登记</el-button>
-          <el-button type="primary" @click="cancel">核销</el-button>
-          <el-button type="primary" @click="outerVisible = true">多层dialog开关</el-button>
-          <el-button type="primary" @click="addVsisible = true">自定义添加数据</el-button>
-        </el-form-item>-->
         <span style="line-height: 40px;float: right;">合计：{{tableData.length}}条数据</span>
       </el-form>
     </el-header>
     <el-table :data="tableData" height="100%" style="width: 100%;">
-          <!-- <el-table-column prop="id" label="序号" fit="true"></el-table-column> -->
-          <!-- <af-table-column prop="id" label="序号" text-aligin="center"></af-table-column>
-        <af-table-column prop="staffCoding" label="人员编码"></af-table-column>
-         <af-table-column prop="name" label="姓名"></af-table-column>
-          <af-table-column prop="gender" label="性别"></af-table-column>
-           <af-table-column prop="certificateType" label="证件类别"></af-table-column>
-            <af-table-column prop="IDcard"  label="证件号码"></af-table-column>
-             <af-table-column prop="greyListType"  label="灰名单类别"></af-table-column>
-              <af-table-column prop="registrationDate"  label="登记日期"></af-table-column>
-               <af-table-column prop="registerPerson"  label="登记人"></af-table-column> -->
-               
       <el-table-column prop="id" label="序号" width="60px;" align="center"></el-table-column>
-      <el-table-column prop="staffCoding" label="人员编码" width="90px;" align="center" ></el-table-column>
       <el-table-column prop="name" label="姓名" width="60px;" align="center"></el-table-column>
       <el-table-column prop="gender" label="性别" width="60px;" align="center"></el-table-column>
       <el-table-column prop="certificateType" label="证件类别" width="200px;" align="center"></el-table-column>
       <el-table-column prop="IDcard" label="证件号码" width="160px;" align="center"></el-table-column>
-      <el-table-column prop="greyListType" label="灰名单类别" width="100px;" align="center"></el-table-column>
+      <el-table-column prop="blacklistReason" label="黑名单缘由" width="100px;" align="center"></el-table-column>
       <el-table-column prop="registrationDate" label="登记日期" width="130px;" align="center"></el-table-column>
       <el-table-column prop="registerPerson" label="登记人" width="90px;" align="center"></el-table-column>
       <el-table-column label="操作" width="150px;" align="center">
@@ -131,12 +122,12 @@ const IDCard18_REGEX =
   "^[1-9](\\d{5})(19|20)(\\d{2})((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)(\\d{3})(\\d|X|x)$";
 const page = "index";
 const tableItem = {
-  staffCoding: "10001", //人员编码
+  // staffCoding: "10001", //人员编码
   name: "李四", //姓名
   gender: "男", //性别
   certificateType: "中华人民共和国居民身份证", //证件类别
   IDcard: "511623199802032222", //证件号码
-  greyListType: "推销", //灰名单类别
+  blacklistReason: "推销", //黑名单缘由
   registrationDate: "2019/03/08 10:00", //登记日期
   registerPerson: "张三" //登记人
 };
@@ -148,13 +139,13 @@ export default {
       page: page,
       id: 50,
       formData: {
-        class: "", //这个class字段是干嘛的--todo
         name: "", //姓名
         gender: "", //性别
         certificateType: "", //证件类型
         registrationDate: "", //登记日期
         IDcard: "", //证件号码
-        registerPerson: "" //登记人
+        registerPerson: "", //登记人
+        class: "" //类别
       },
       addForm: {
         staffCoding: "", //人员编码
