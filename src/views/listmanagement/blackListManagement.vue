@@ -85,18 +85,6 @@
       </el-table-column>
     </el-table>
 
-    <!-- 多层dialog 
-    <el-dialog title="外层 Dialog" :visible.sync="outerVisible">
-      <el-dialog width="30%" title="内层 Dialog" :visible.sync="innerVisible" append-to-body>
-        <div>这里加入内层外层dialog的内容</div>
-      </el-dialog>
-      <div>这里加入外层的dialog的内容</div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="outerVisible = false">取 消</el-button>
-        <el-button type="primary" @click="innerVisible = true">打开内层 Dialog</el-button>
-      </div>
-    </el-dialog>
-    -->
     <el-dialog width="80%" title="修改数据" :visible.sync="updateData">
       <el-form :model="updateForm" :rules="rules" ref="updateForm" label-width="100px" inline>
         <div>
