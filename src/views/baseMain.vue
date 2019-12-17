@@ -6,8 +6,8 @@
           <template slot="title">
             <i class="el-icon-message">导航一</i>
           </template>
-          <el-menu-item index="1-1" @click="push('/grayListManagement')">灰名单管理</el-menu-item>
-          <el-menu-item index="1-2" @click="push('/blackListManagement')">黑名单管理</el-menu-item>
+          <el-menu-item index="1-1" @click="push('/contractprojectbdmanagement')">合同项目维护</el-menu-item>
+          <el-menu-item index="1-2" @click="push('/contractriskbdmanagement')">风险基础数据管理</el-menu-item>
           <el-menu-item index="1-3">选项3</el-menu-item>
           <el-submenu index="1-4">
             <template slot="title">选项4</template>

@@ -26,16 +26,16 @@ var routes = [{
 ];
 
 var menus = [{
-        name: "grayListManagement",
-        path: "/grayListManagement",
+        name: "contractprojectbdmanagement",
+        path: "/contractprojectbdmanagement",
         component: () =>
-            import ('@/views/listmanagement/grayListManagement')
+            import ('@/views/contractdocmanage/contractprojectbdmanagement')
     },
     {
-        name: "blackListManagement",
-        path: "/blackListManagement",
+        name: "contractriskbdmanagement",
+        path: "/contractriskbdmanagement",
         component: () =>
-            import ('@/views/listmanagement/blackListManagement')
+            import ('@/views/contractdocmanage/contractriskbdmanagement')
     }
 ];
 
