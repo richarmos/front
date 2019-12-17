@@ -26,14 +26,14 @@ var routes = [{
 ];
 
 var menus = [{
-        name: "contractprojectbdmanagement",
-        path: "/contractprojectbdmanagement",
+        name: "contractProjectBDManagement",
+        path: "/contractProjectBDManagement",
         component: () =>
             import ('@/views/contractdocmanage/contractprojectbdmanagement')
     },
     {
-        name: "contractriskbdmanagement",
-        path: "/contractriskbdmanagement",
+        name: "contractRiskBDManagement",
+        path: "/contractRiskBDManagement",
         component: () =>
             import ('@/views/contractdocmanage/contractriskbdmanagement')
     }
