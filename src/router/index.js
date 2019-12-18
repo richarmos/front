@@ -3,6 +3,11 @@ import Router from "vue-router";
 import baseMain from "@/views/baseMain";
 import login from "@/views/login";
 
+import 'xe-utils'
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/index.css'
+Vue.use(VXETable)
+
 Vue.use(Router);
 
 var routes = [{

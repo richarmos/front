@@ -2,201 +2,275 @@
   <el-container :id="page" style="height: 100%;">
     <el-header style="height:auto">
       <div style="height:40px;">
+        <span
+          style="float:left;margin-top:7px;margin-left:2px;"
+          @click="chooseTimeSeg"
+        >
+          <el-radio-group v-model="radio" style="color:#fff;">
+            <el-radio style="color:#fff;" :label="3">本日</el-radio>
+            <el-radio style="color:#fff;" :label="6">本周</el-radio>
+            <el-radio style="color:#fff;" :label="9">本月</el-radio>
+            <el-radio style="color:#fff;" :label="11">本年</el-radio>
+          </el-radio-group>
+        </span>
         <div class="el-header-searchdiv" v-show="searchdivvisible">
-          <el-input class="el-header-div-el-input" size="mini" placeholder="姓名"></el-input>
-          <el-button style="margin-left:10px;" size="mini" type="primary" @click="onSearch">搜索</el-button>
-          <el-button style="margin-left:10px;" size="mini" type="primary" @click="addNew=true">新增</el-button>
+          <el-input
+            class="el-header-div-el-input"
+            size="mini"
+            placeholder=""
+          ></el-input>
+          <el-button
+            style="margin-left:10px;"
+            size="mini"
+            type="primary"
+            @click="onSearch"
+            >搜索</el-button
+          >
+          <el-button
+            style="margin-left:10px;"
+            size="mini"
+            type="primary"
+            @click="addNew = true"
+            >新建</el-button
+          >
         </div>
         <span class="el-icon-arrow-down-span">
           <i
             class="header-icon el-icon-arrow-down"
-            @click="formvisible = !formvisible;searchdivvisible=!searchdivvisible"
+            @click="
+              formvisible = !formvisible;
+              searchdivvisible = !searchdivvisible;
+            "
           ></i>
-          <span class="el-icon-arrow-down-span-span">合计：{{tableData.length}}条数据</span>
+          <span class="el-icon-arrow-down-span-span"
+            >合计：{{ tableData.length }}条数据</span
+          >
         </span>
       </div>
+
       <el-form
         size="mini"
         :inline="true"
-        label-width="80px"
+        label-width="100px"
         :model="formData"
         class="demo-form-inline"
         v-show="formvisible"
       >
-        <el-form-item label="姓名">
-          <el-input v-model="formData.name" placeholder="姓名"></el-input>
-        </el-form-item>
-        <el-form-item label="性别">
-          <el-select v-model="formData.gender">
-            <el-option label="男" value="man"></el-option>
-            <el-option label="女" value="woman"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="证件类型">
-          <el-select v-model="formData.IDcard">
-            <el-option label="中华人民共和国居民身份证" value="A"></el-option>
-            <el-option label="港澳台居民身份证" value="B"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="证件号码">
-          <el-input v-model="formData.IDcard" placeholder="证件号码"></el-input>
-        </el-form-item>
-        <el-form-item label="登记日期">
-          <el-date-picker
-            v-model="formData.registrationDate"
-            type="datetimerange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            style="width:430px;"
-          ></el-date-picker>
-        </el-form-item>
-
-        <el-form-item label="登记人">
-          <el-input style="width:178px;" v-model="formData.registerPerson" placeholder="登记人"></el-input>
-        </el-form-item>
-
-        <el-form-item style="margin-left: 100px;">
-          <el-button style="margin-left:-20px;" type="primary" @click="onSearch">搜索</el-button>
-          <el-button style="margin-left:45px;" type="primary" @click="addNew=true">新增</el-button>
-        </el-form-item>
+        <div>
+          <span style="margin-left:100px;">
+            <el-form-item label="风险名称">
+              <el-input
+                v-model="formData.riskName"
+                placeholder="风险名称"
+                style="width:175px;"
+              ></el-input>
+            </el-form-item>
+          </span>
+          <span>
+            <el-form-item label="创建时间从">
+              <el-date-picker
+                v-model="formData.createDate"
+                type="datetimerange"
+                range-separator="到"
+                start-placeholder="请选择时间"
+                end-placeholder="请选择时间"
+                style="width:430px;"
+              ></el-date-picker>
+            </el-form-item>
+          </span>
+        </div>
+        <div>
+          <span style="margin-left:100px;">
+            <el-form-item label="关联合同类型">
+              <el-select v-model="formData.contractType">
+                <el-option label="A类" value="A"></el-option>
+                <el-option label="B类" value="B"></el-option>
+                <el-option label="C类" value="C"></el-option>
+                <el-option label="D类" value="D"></el-option>
+              </el-select>
+            </el-form-item>
+          </span>
+          <span>
+            <el-form-item style="margin-left: 100px;">
+              <el-button
+                style="margin-left:2px;"
+                type="primary"
+                @click="onSearch"
+                >搜索</el-button
+              >
+              <el-button
+                style="margin-left:45px;"
+                type="primary"
+                @click="addNew = true"
+                >新建</el-button
+              >
+            </el-form-item>
+          </span>
+        </div>
       </el-form>
     </el-header>
-    <el-table :data="tableData" height="100%" style="width: 100%;">
-      <el-table-column prop="id" label="序号" width="60px;" align="center"></el-table-column>
-      <el-table-column prop="staffCoding" label="人员编码" width="90px;" align="center"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="60px;" align="center"></el-table-column>
-      <el-table-column prop="gender" label="性别" width="60px;" align="center"></el-table-column>
-      <el-table-column prop="certificateType" label="证件类别" width="200px;" align="center"></el-table-column>
-      <el-table-column prop="IDcard" label="证件号码" width="200px;" align="center"></el-table-column>
-      <el-table-column prop="greyListType" label="灰名单类别" width="100px;" align="center"></el-table-column>
-      <el-table-column prop="registrationDate" label="登记日期" width="150px;" align="center"></el-table-column>
-      <el-table-column prop="registerPerson" label="登记人" width="90px;" align="center"></el-table-column>
+    <el-table
+      :data="tableData"
+      height="100%"
+      style="width: 100%;"
+      @row-click="
+        openDetails;
+        queryData = true;
+      "
+    >
+      <el-table-column
+        prop="id"
+        label="序号"
+        width="60px;"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="riskName"
+        label="风险名称"
+        width="200px;"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="contractType"
+        label="风险类别"
+        width="120px;"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="riskControlRec"
+        label="风险控制建议"
+        width="300px;"
+        align="center"
+      ></el-table-column>
+      <el-table-column
+        prop="createDate"
+        label="登记日期"
+        width="150px;"
+        align="center"
+      ></el-table-column>
       <el-table-column fixed="right" label="操作" width="200px;" align="center">
         <template slot-scope="scope">
-          <!-- <el-button size="mini" @click="update(scope)" type="warning">修改</el-button> -->
-          <el-button size="mini" @click="updateData=true" type="warning">修改</el-button>
-          <el-button size="mini" @click="query(scope);queryData=true;">查看</el-button>
+          <el-button
+            size="mini"
+            @click="
+              update(scope);
+              updateData = true;
+            "
+            type="warning"
+            >修改</el-button
+          >
+          <el-button
+            size="mini"
+            @click="
+              query(scope);
+              queryData = true;
+            "
+            >查看</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
-    <!-- 多层dialog 
-    <el-dialog title="外层 Dialog" :visible.sync="outerVisible">
-      <el-dialog width="30%" title="内层 Dialog" :visible.sync="innerVisible" append-to-body>
-        <div>这里加入内层外层dialog的内容</div>
-      </el-dialog>
-      <div>这里加入外层的dialog的内容</div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="outerVisible = false">取 消</el-button>
-        <el-button type="primary" @click="innerVisible = true">打开内层 Dialog</el-button>
-      </div>
-    </el-dialog>
-    -->
-
-    <el-dialog width="80%" title="修改数据" :visible.sync="updateData">
-      <el-form :model="updateForm" :rules="rules" ref="updateForm" label-width="100px" inline>
+    <el-dialog width="60%" title="修改数据" :visible.sync="updateData">
+      <el-form
+        :model="updateForm"
+        :rules="rules"
+        ref="updateForm"
+        label-width="100px"
+        inline
+      >
         <div>
-          <el-form-item label="人员编码">
-            <el-input style="width:200px;" v-model="updateForm.staffCoding" placeholder="人员编码"></el-input>
+          <el-form-item label="风险编号">
+            <el-input
+              style="width:220px;"
+              v-model="updateForm.riskCoding"
+              placeholder="风险编号"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="姓名">
-            <el-input v-model="updateForm.name" placeholder="姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="性别">
-            <el-select v-model="updateForm.gender">
-              <el-option label="男" value="man"></el-option>
-              <el-option label="女" value="woman"></el-option>
-            </el-select>
+          <el-form-item label="风险名称">
+            <el-input
+              style="width:220px;"
+              v-model="updateForm.riskname"
+              placeholder="风险名称"
+            ></el-input>
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="证件类型">
-            <el-select v-model="updateForm.certificateType">
-              <el-option label="中华人民共和国居民身份证" value="A"></el-option>
-              <el-option label="港澳台居民身份证" value="B"></el-option>
+          <el-form-item label="关联合同类型">
+            <el-select style="width:220px;" v-model="updateForm.contractType">
+              <el-option label="A类" value="A"></el-option>
+              <el-option label="B类" value="B"></el-option>
+              <el-option label="C类" value="C"></el-option>
+              <el-option label="D类" value="D"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="证件号码">
-            <el-input v-model="updateForm.IDcard" placeholder="证件号码"></el-input>
-          </el-form-item>
-          <el-form-item label="灰名单类别">
-            <el-select v-model="updateForm.greyListType">
-              <el-option label="推销" value="A1"></el-option>
-              <el-option label="乞讨" value="B1"></el-option>
-              <el-option label="非法拉客人员" value="C1"></el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <div style="height:102px;">
-          <el-form-item label="照片">
-            <el-image
-              v-model="updateForm.pictures[0]"
-              style="width: 100px; height: 100px"
-              :src="url1"
-              :fit="fit"
-            ></el-image>
-            <el-image
-              v-model="updateForm.pictures[1]"
-              style="width: 100px; height: 100px"
-              :src="url2"
-              :fit="fit"
-            ></el-image>
-            <el-image
-              v-model="updateForm.pictures[2]"
-              style="width: 100px; height: 100px"
-              :src="url3"
-              :fit="fit"
-            ></el-image>
-            <el-image
-              v-model="updateForm.pictures[3]"
-              style="width: 100px; height: 100px"
-              :src="url4"
-              :fit="fit"
-            ></el-image>
-            <el-image
-              v-model="updateForm.pictures[4]"
-              style="width: 100px; height: 100px"
-              :src="url5"
-              :fit="fit"
-            ></el-image>
-          </el-form-item>
-        </div>
-        <div>
-          <el-form-item label="登记人">
-            <el-input style="width:200px;" v-model="updateForm.registerPerson" placeholder="登记人"></el-input>
-          </el-form-item>
-          <el-form-item label="登记时间">
+          <el-form-item label="创建时间">
             <el-date-picker
-              v-model="updateForm.registrationDate"
+              style="width:220px;"
+              v-model="updateForm.createDate"
               type="datetime"
-              placeholder="选择日期时间"
+              placeholder="创建时间"
             ></el-date-picker>
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="备注">
+          <!-- <el-form-item label="风险点"> -->
+          <el-form-item label=" ">
+            <vxe-table
+              border="none"
+              height="10"
+              size="small"
+              ref="xTableUpdate"
+              align="left"
+              style="width:552px;"
+              show-header="false"
+              row-style="background-color:#fff;color:black;font-size:14px;"
+              :data="riskPointTableDataUpdate"
+              :edit-config="{ trigger: 'click', mode: 'cell' }"
+            >
+              <vxe-table-column
+                title="风险点"
+                field="riskPoint"
+                :edit-render="{ type: 'visible', name: 'input' }"
+              ></vxe-table-column>
+            </vxe-table>
+          </el-form-item>
+          <el-button type="primary" @click="insertEventUpdate(-1)"
+            >添 加</el-button
+          >
+        </div>
+        <div>
+          <el-form-item label="风险控制建议">
             <el-input
               class="el-input-remarks"
               type="textarea"
               :rows="3"
               placeholder
-              v-model="updateForm.remarks"
-              style="width:818px;"
+              v-model="updateForm.riskControlAdvice"
+              style="width:552px;"
             ></el-input>
           </el-form-item>
         </div>
-
         <div>
           <el-form-item>
-            <el-button class="el-form-item-el-button" @click="updateData = false">取 消</el-button>
-            <el-button type="primary" @click="addData">保 存</el-button>
+            <el-button
+              class="el-form-item-el-button"
+              @click="updateData = false"
+              >关 闭</el-button
+            >
+            <el-button type="primary" @click="updateDataSave()"
+              >保 存</el-button
+            >
           </el-form-item>
         </div>
       </el-form>
     </el-dialog>
-
-    <el-dialog width="80%" class="el-dialog-adddata" title="添加数据" :visible.sync="addNew">
+    <el-dialog
+      width="60%"
+      class="el-dialog-adddata"
+      title="风险登记"
+      :visible.sync="addNew"
+    >
       <el-form
         class="el-dialog-adddata-el-form"
         :model="addForm"
@@ -206,100 +280,90 @@
         inline
       >
         <div>
-          <el-form-item label="人员编码">
-            <el-input style="width:200px;" v-model="addForm.staffCoding" placeholder="人员编码"></el-input>
+          <el-form-item label="风险编号">
+            <el-input
+              style="width:220px;"
+              v-model="addForm.riskCoding"
+              placeholder="风险编号"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="姓名">
-            <el-input v-model="addForm.name" placeholder="姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="性别">
-            <el-select v-model="addForm.gender">
-              <el-option label="男" value="man"></el-option>
-              <el-option label="女" value="woman"></el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <div>
-          <el-form-item label="证件类型">
-            <el-select v-model="addForm.certificateType">
-              <el-option label="中华人民共和国居民身份证" value="A"></el-option>
-              <el-option label="港澳台居民身份证" value="B"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="证件号码">
-            <el-input v-model="addForm.IDcard" placeholder="证件号码"></el-input>
-          </el-form-item>
-          <el-form-item label="灰名单类别">
-            <el-select v-model="addForm.greyListType">
-              <el-option label="推销" value="A1"></el-option>
-              <el-option label="乞讨" value="B1"></el-option>
-              <el-option label="非法拉客人员" value="C1"></el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <div style="height:102px;">
-          <el-form-item label="照片">
-            <el-image
-              v-model="addForm.pictures[0]"
-              style="width: 100px; height: 100px"
-              :src="url1"
-              :fit="fit"
-            ></el-image>
-            <el-image
-              v-model="addForm.pictures[1]"
-              style="width: 100px; height: 100px"
-              :src="url2"
-              :fit="fit"
-            ></el-image>
-            <el-image
-              v-model="addForm.pictures[2]"
-              style="width: 100px; height: 100px"
-              :src="url3"
-              :fit="fit"
-            ></el-image>
-            <el-image
-              v-model="addForm.pictures[3]"
-              style="width: 100px; height: 100px"
-              :src="url4"
-              :fit="fit"
-            ></el-image>
-            <el-image
-              v-model="addForm.pictures[4]"
-              style="width: 100px; height: 100px;"
-              :src="url5"
-              :fit="fit"
-            ></el-image>
+          <el-form-item label="风险名称">
+            <el-input
+              style="width:220px;"
+              v-model="addForm.riskname"
+              placeholder="风险名称"
+            ></el-input>
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="登记人">
-            <el-input style="width:200px;" v-model="addForm.registerPerson" placeholder="登记人"></el-input>
+          <el-form-item label="关联合同类型">
+            <el-select style="width:220px;" v-model="addForm.contractType">
+              <el-option label="A类" value="A"></el-option>
+              <el-option label="B类" value="B"></el-option>
+              <el-option label="C类" value="C"></el-option>
+              <el-option label="D类" value="D"></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="登记时间">
-            <el-date-picker v-model="addForm.registrationDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
+          <el-form-item label="创建时间">
+            <el-date-picker
+              style="width:220px;"
+              v-model="addForm.createDate"
+              type="datetime"
+              placeholder="创建时间"
+            ></el-date-picker>
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="备注">
+          <el-form-item label=" ">
+            <vxe-table
+              border="none"
+              height="10"
+              size="small"
+              ref="xTable"
+              align="left"
+              style="width:552px;"
+              show-header="false"
+              row-style="background-color:#fff;color:black;font-size:14px;"
+              :data="riskPointTableData"
+              :edit-config="{ trigger: 'click', mode: 'cell' }"
+            >
+              <vxe-table-column
+                title="风险点"
+                field="riskPoint"
+                :edit-render="{ type: 'visible', name: 'input' }"
+              ></vxe-table-column>
+            </vxe-table>
+          </el-form-item>
+          <el-button type="primary" @click="insertEvent(-1)">添 加</el-button>
+        </div>
+        <div>
+          <el-form-item label="风险控制建议">
             <el-input
               class="el-input-remarks"
               type="textarea"
               :rows="3"
               placeholder
-              v-model="addForm.remarks"
-              style="width:818px;"
+              v-model="addForm.riskControlAdvice"
+              style="width:552px;"
             ></el-input>
           </el-form-item>
         </div>
         <div>
           <el-form-item>
-            <el-button class="el-form-item-el-button" @click="addNew = false">取 消</el-button>
-            <el-button type="primary" @click="addData">保 存</el-button>
+            <el-button class="el-form-item-el-button" @click="addNew = false"
+              >关 闭</el-button
+            >
+            <el-button type="primary" @click="addDataSave()">保 存</el-button>
           </el-form-item>
         </div>
       </el-form>
     </el-dialog>
-    <el-dialog width="80%" class="el-dialog-adddata" title="查看数据" :visible.sync="queryData">
+    <el-dialog
+      width="60%"
+      class="el-dialog-adddata"
+      title="查看数据"
+      :visible.sync="queryData"
+    >
       <el-form
         class="el-dialog-adddata-el-form"
         :model="queryForm"
@@ -309,110 +373,74 @@
         inline
       >
         <div>
-          <el-form-item label="人员编码">
+          <el-form-item label="风险编号">
             <el-input
-              disabled="false"
-              style="width:200px;"
-              v-model="queryForm.staffCoding"
-              placeholder="人员编码"
+              disabled="true"
+              style="width:220px;"
+              v-model="queryForm.riskCoding"
+              placeholder="风险编号"
             ></el-input>
           </el-form-item>
-          <el-form-item label="姓名">
-            <el-input disabled="false" v-model="queryForm.name" placeholder="姓名"></el-input>
-          </el-form-item>
-          <el-form-item label="性别">
-            <el-select disabled="false" v-model="queryForm.gender">
-              <el-option label="男" value="man"></el-option>
-              <el-option label="女" value="woman"></el-option>
-            </el-select>
+          <el-form-item label="风险名称">
+            <el-input
+              disabled="true"
+              style="width:220px;"
+              v-model="queryForm.riskname"
+              placeholder="风险名称"
+            ></el-input>
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="证件类型">
-            <el-select disabled="false" v-model="queryForm.certificateType">
-              <el-option label="中华人民共和国居民身份证" value="A"></el-option>
-              <el-option label="港澳台居民身份证" value="B"></el-option>
+          <el-form-item label="关联合同类型">
+            <el-select
+              disabled="true"
+              style="width:220px;"
+              v-model="queryForm.contractType"
+            >
+              <el-option label="A类" value="A"></el-option>
+              <el-option label="B类" value="B"></el-option>
+              <el-option label="C类" value="C"></el-option>
+              <el-option label="D类" value="D"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="证件号码">
-            <el-input disabled="false" v-model="queryForm.IDcard" placeholder="证件号码"></el-input>
-          </el-form-item>
-          <el-form-item label="灰名单类别">
-            <el-select disabled="false" v-model="queryForm.greyListType">
-              <el-option label="推销" value="A1"></el-option>
-              <el-option label="乞讨" value="B1"></el-option>
-              <el-option label="非法拉客人员" value="C1"></el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <div style="height:102px;">
-          <el-form-item label="照片">
-            <el-image
-              v-model="queryForm.pictures[0]"
-              style="width: 100px; height: 100px"
-              :src="url1"
-              :fit="fit"
-            ></el-image>
-            <el-image
-              v-model="queryForm.pictures[1]"
-              style="width: 100px; height: 100px"
-              :src="url2"
-              :fit="fit"
-            ></el-image>
-            <el-image
-              v-model="queryForm.pictures[2]"
-              style="width: 100px; height: 100px"
-              :src="url3"
-              :fit="fit"
-            ></el-image>
-            <el-image
-              v-model="queryForm.pictures[3]"
-              style="width: 100px; height: 100px"
-              :src="url4"
-              :fit="fit"
-            ></el-image>
-            <el-image
-              v-model="queryForm.pictures[4]"
-              style="width: 100px; height: 100px;"
-              :src="url5"
-              :fit="fit"
-            ></el-image>
-          </el-form-item>
-        </div>
-        <div>
-          <el-form-item label="登记人">
-            <el-input
-              disabled="false"
-              style="width:200px;"
-              v-model="queryForm.registerPerson"
-              placeholder="登记人"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="登记时间">
+          <el-form-item label="创建时间">
             <el-date-picker
-              disabled="false"
-              v-model="queryForm.registrationDate"
+              disabled="true"
+              style="width:220px;"
+              v-model="queryForm.createDate"
               type="datetime"
-              placeholder="选择日期时间"
+              placeholder="创建时间"
             ></el-date-picker>
           </el-form-item>
         </div>
         <div>
-          <el-form-item label="备注">
+          <el-form-item label="风险点">
             <el-input
-              disabled="false"
+              disabled="true"
+              style="width:552px;"
+              v-model="queryForm.riskPoint"
+              placeholder="风险点"
+            ></el-input>
+          </el-form-item>
+        </div>
+        <div>
+          <el-form-item label="风险控制建议">
+            <el-input
+              disabled="true"
               class="el-input-remarks"
               type="textarea"
               :rows="3"
               placeholder
-              v-model="queryForm.remarks"
-              style="width:818px;"
+              v-model="queryForm.riskControlAdvice"
+              style="width:552px;"
             ></el-input>
           </el-form-item>
         </div>
         <div>
           <el-form-item>
-            <el-button class="el-form-item-el-button" @click="queryData = false">取 消</el-button>
+            <el-button class="el-form-item-el-button" @click="queryData = false"
+              >取 消</el-button
+            >
           </el-form-item>
         </div>
       </el-form>
@@ -427,66 +455,51 @@ const IDCard18_REGEX =
   "^[1-9](\\d{5})(19|20)(\\d{2})((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)(\\d{3})(\\d|X|x)$";
 const page = "index";
 const tableItem = {
-  staffCoding: "10001", //人员编码
-  name: "李四", //姓名
-  gender: "男", //性别
-  certificateType: "中华人民共和国居民身份证", //证件类别
-  IDcard: "511623199802032222", //证件号码
-  greyListType: "推销", //灰名单类别
-  registrationDate: "2019/03/08 10:00", //登记日期
-  registerPerson: "张三" //登记人
+  riskName: "XX", //风险名称
+  contractType: "A类", //关联合同类型
+  riskControlRec: "XX", //风险控制建议
+  createDate: "2019/01/08 10:00" //创建日期
+};
+const riskPointTableItem = {
+  riskPoint: "" //风险点
+};
+const riskPointTableUpdateItem = {
+  riskPoint: "XXXXXXX" //风险点
 };
 export default {
   name: page,
   props: [""],
   data() {
     return {
-      page: page,
-      id: 50,
+      radio: 3,
       formData: {
-        class: "", //这个class字段是干嘛的--todo
-        name: "", //姓名
-        gender: "", //性别
-        certificateType: "", //证件类型
-        registrationDate: "", //登记日期
-        IDcard: "", //证件号码
-        registerPerson: "" //登记人
+        riskName: "", //风险名称
+        createDate: "", //创建时间
+        contractType: "" //关联合同类别
       },
       updateForm: {
-        staffCoding: "", //人员编码
-        name: "", //姓名
-        gender: "", //性别
-        certificateType: "", //证件类别
-        IDcard: "", //证件号码
-        greyListType: "", //灰名单类别
-        pictures: ["url1", "url2", "url3", "url4", "url5"], //照片
-        registerPerson: "", //登记人
-        registrationDate: "", //登记日期
-        remarks: "" //备注
+        riskCoding: "", //风险编号
+        riskname: "", //风险名称
+        contractType: "", //关联合同类型
+        createDate: "", //创建时间
+        riskPoint: "", //风险点
+        riskControlAdvice: "" //风险控制建议
       },
       addForm: {
-        staffCoding: "", //人员编码
-        name: "", //姓名
-        gender: "", //性别
-        certificateType: "", //证件类别
-        IDcard: "", //证件号码
-        greyListType: "", //灰名单类别
-        pictures: ["url1", "url2", "url3", "url4", "url5"], //照片
-        registerPerson: "", //登记人
-        registrationDate: "", //登记日期
-        remarks: "" //备注
+        riskCoding: "", //风险编号
+        riskname: "", //风险名称
+        contractType: "", //关联合同类型
+        createDate: "", //创建时间
+        riskPoint: "", //风险点
+        riskControlAdvice: "" //风险控制建议
       },
       queryForm: {
-        staffCoding: "", //人员编码
-        name: "", //姓名
-        gender: "", //性别
-        certificateType: "", //证件类别
-        IDcard: "", //证件号码
-        greyListType: "", //灰名单类别
-        pictures: ["url1", "url2", "url3", "url4", "url5"], //照片
-        registerPerson: "", //登记人
-        registrationDate: "", //登记日期
-        remarks: "" //备注
+        riskCoding: "", //风险编号
+        riskname: "", //风险名称
+        contractType: "", //关联合同类型
+        createDate: "", //创建时间
+        riskPoint: "", //风险点
+        riskControlAdvice: "" //风险控制建议
       },
       rules: {
         name: [
@@ -519,11 +532,11 @@ export default {
         address: [{ required: true, message: "地址不能为空", trigger: "blur" }]
       },
       tableData: [],
+      riskPointTableData: [],
+      riskPointTableDataUpdate: [],
       addNew: false,
       updateData: false,
       queryData: false,
-      outerVisible: false,
-      innerVisible: false,
       addVsisible: false,
       formvisible: false,
       searchdivvisible: true
@@ -534,64 +547,10 @@ export default {
     for (let i = 1; i < 20; i++) {
       this.tableData.push({ id: i, ...tableItem });
     }
+    this.riskPointTableData.push({ ...riskPointTableItem });
+    this.riskPointTableDataUpdate.push({ ...riskPointTableUpdateItem });
   },
   methods: {
-    IDcardRules(rule, idCard, callback) {
-      console.log(rule, idCard);
-      //15位和18位身份证号码的正则表达式
-      var regIdCard = /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/;
-      //如果通过该验证，说明身份证格式正确，但准确性还需计算
-      if (regIdCard.test(idCard)) {
-        if (idCard.length == 18) {
-          var idCardWi = new Array(
-            7,
-            9,
-            10,
-            5,
-            8,
-            4,
-            2,
-            1,
-            6,
-            3,
-            7,
-            9,
-            10,
-            5,
-            8,
-            4,
-            2
-          ); //将前17位加权因子保存在数组里
-          var idCardY = new Array(1, 0, 10, 9, 8, 7, 6, 5, 4, 3, 2); //这是除以11后，可能产生的11位余数、验证码，也保存成数组
-          var idCardWiSum = 0; //用来保存前17位各自乖以加权因子后的总和
-          for (var i = 0; i < 17; i++) {
-            idCardWiSum += idCard.substring(i, i + 1) * idCardWi[i];
-          }
-          var idCardMod = idCardWiSum % 11; //计算出校验码所在数组的位置
-          var idCardLast = idCard.substring(17); //得到最后一位身份证号码
-          //如果等于2，则说明校验码是10，身份证号码最后一位应该是X
-          if (idCardMod == 2) {
-            if (idCardLast == "X" || idCardLast == "x") {
-              //alert("恭喜通过验证啦！");
-              callback();
-            } else {
-              callback(new Error("身份证号码错误！"));
-            }
-          } else {
-            //用计算出的验证码与最后一位身份证号码匹配，如果一致，说明通过，否则是无效的身份证号码
-            if (idCardLast == idCardY[idCardMod]) {
-              //alert("恭喜通过验证啦！");
-              callback();
-            } else {
-              return false;
-              callback(new Error("身份证号码错误！"));
-            }
-          }
-        }
-      } else {
-        callback(new Error("身份证格式不正确"));
-      }
-    },
     onSearch() {
       this.$message("search!");
     },
@@ -601,24 +560,9 @@ export default {
     cancel() {
       this.$message("cancel!");
     },
-    deleteRow(scope) {
-      this.$confirm("此操作将永久该条数据, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          this.tableData.splice(scope.$index, 1);
-          this.$message(`删除数据成功，删除数据id为${scope.row.id}`);
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    },
-    addData() {},
+
+    addDataSave() {},
+    updateDataSave() {},
     update(scope) {
       api.test().then(res => {
         this.tableData.push({ id: this.id, ...res });
@@ -628,40 +572,40 @@ export default {
     },
     query(scope) {
       this.$message(`查询数据成功，数据内容为：${JSON.stringify(scope.row)}`);
+    },
+    async insertEvent(row) {
+      let record = {};
+      let { row: newRow } = await this.$refs.xTable.insertAt(record, row);
+      await this.$refs.xTable.setActiveCell(newRow);
+    },
+    async insertEventUpdate(row) {
+      // let { row: newRow } = await this.$refs.xTableUpdate.insertAt(row);
+      // await this.$refs.xTable.setActiveCell(newRow);
+      let record = {};
+      let { row: newRow } = await this.$refs.xTableUpdate.insertAt(record, row);
+      await this.$refs.xTable.setActiveCell(newRow);
+    },
+    openDetails(row) {
+      // alert("hellp");
+      // queryData = true;处理行的数据显示进query页面
+    },
+    chooseTimeSeg() {
+      // alert("hellp");
+      //处理点击事件
     }
   }
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 /deep/ .el-form-item__label {
   color: #ddd;
 }
-div.el-dialog {
-  width: 80%;
-}
-.el-dialog-adddata {
-}
-.el-dialog-adddata-el-form {
-}
-.el-dialog__header {
-}
-.el-dialog__body {
+
+.el-form-item-el-button {
+  margin-left: 340px;
 }
 
-.el-input-remarks {
-  width: 450px;
-}
-.el-form-item-el-button {
-  margin-left: 450px;
-}
-.title-input {
-  height: 0px;
-  width: 250px;
-  margin-top: 0px;
-  margin-right: 20px;
-  margin-left: 200px;
-}
 .el-header {
   padding: 0;
   background-color: #46535a;
@@ -672,7 +616,7 @@ div.el-dialog {
 }
 .el-header-searchdiv {
   float: left;
-  margin-left: 350px;
+  margin-left: 50px;
 }
 .el-icon-arrow-down-span {
   float: right;
