@@ -22,7 +22,7 @@
     "jquery": "^3.3.1",
     "js-cookie": "^2.2.0",
     "jscs": "^3.0.7",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.2",
     "mockjs": "^1.0.1-beta3",
     "moment": "^2.24.0",
     "node-sass": "^4.11.0",
