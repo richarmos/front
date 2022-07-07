@@ -24,7 +24,7 @@
     "jscs": "^3.0.7",
     "minimist": "^1.2.0",
     "mockjs": "^1.0.1-beta3",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
     "sortablejs": "^1.8.0-rc1",
